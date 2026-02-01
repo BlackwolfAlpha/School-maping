@@ -30,18 +30,14 @@ function buildOptions(selectEl, values, allLabel = "All") {
 function normalizeCityName(name) {
   let s = norm(name);
 
-  // remove suffix after dash: "אבו סנאן- דרוזי"
   s = s.split("-")[0].trim();
   s = s.split("–")[0].trim();
 
-  // remove prefixes
   s = s.replace(/^מועצה\s+מקומית\s+/g, "");
   s = s.replace(/^עיריית\s+/g, "");
 
-  // normalize quotes
   s = s.replace(/[׳״"]/g, "");
 
-  // common variation קריית/קרית
   s = s.replace(/^קריית\s+/g, "קרית ");
 
   return s;
@@ -78,7 +74,6 @@ async function parseYouthDepartmentsFromHtml(htmlPath) {
     const phoneRaw = safeText(tds[5]);
     const email = safeText(tds[6]).replace(/\s+/g, "");
 
-    // Sector sometimes at 8, sometimes junk -> clean
     let sector = safeText(tds[8] ?? null);
     if (!sector || /^\d+$/.test(sector)) sector = "";
     if (sector === "ו'---") sector = "";
@@ -95,7 +90,6 @@ async function parseYouthDepartmentsFromHtml(htmlPath) {
     });
   }
 
-  // Deduplicate by city name (keep first)
   const uniq = new Map();
   for (const r of parsed) {
     if (!uniq.has(r.city)) uniq.set(r.city, r);
@@ -148,7 +142,6 @@ function renderList(listEl, rows, onClickRow) {
   }
 }
 
-// ---- GeoJSON bbox indexing (reliable zoom) ----
 function bboxFromCoords(coords) {
   const flat = [];
 
@@ -182,7 +175,7 @@ async function buildMunicipalBboxIndex(geojsonUrl, featureKey = "name") {
   const gj = await res.json();
   const feats = Array.isArray(gj?.features) ? gj.features : [];
 
-  const index = new Map(); // normalizedName -> bbox
+  const index = new Map();
 
   for (const f of feats) {
     const rawName = f?.properties?.[featureKey];
@@ -192,7 +185,6 @@ async function buildMunicipalBboxIndex(geojsonUrl, featureKey = "name") {
     const bb = bboxFromCoords(f?.geometry?.coordinates);
     if (!bb) continue;
 
-    // keep first
     if (!index.has(key)) index.set(key, bb);
   }
 
@@ -200,17 +192,18 @@ async function buildMunicipalBboxIndex(geojsonUrl, featureKey = "name") {
 }
 
 function flyToCityByIndex(map, bboxIndex, cityName) {
-  if (!map || !bboxIndex || !cityName) return;
+  if (!map || !bboxIndex || !cityName) return false;
 
   const key = normalizeCityName(cityName);
   const bb = bboxIndex.get(key);
 
   if (!bb) {
     console.warn("No bbox found for city:", cityName, "normalized:", key);
-    return;
+    return false;
   }
 
   map.fitBounds(bb, { padding: 80, duration: 700 });
+  return true;
 }
 
 export async function setupSideMenu(map, {
@@ -230,7 +223,6 @@ export async function setupSideMenu(map, {
     return;
   }
 
-  // 1) load youth table
   let allRows = [];
   try {
     allRows = await parseYouthDepartmentsFromHtml(htmlPath);
@@ -241,7 +233,11 @@ export async function setupSideMenu(map, {
     return;
   }
 
-  // 2) build bbox index from geojson
+  const rowByCity = new Map();
+  for (const r of allRows) {
+    rowByCity.set(normalizeCityName(r.city), r);
+  }
+
   let bboxIndex;
   try {
     bboxIndex = await buildMunicipalBboxIndex(muniGeojsonUrl, featureKey);
@@ -255,6 +251,8 @@ export async function setupSideMenu(map, {
   buildOptions(districtEl, new Set(allRows.map(r => r.district)), "All");
   buildOptions(sectorEl, new Set(allRows.map(r => r.sector).filter(Boolean)), "All");
 
+  let lastFiltered = allRows;
+
   const apply = () => {
     const q = norm(qEl.value).toLowerCase();
     const d = districtEl.value;
@@ -267,16 +265,44 @@ export async function setupSideMenu(map, {
       return okQ && okD && okS;
     });
 
+    lastFiltered = filtered;
+
     if (countEl) {
       countEl.textContent = ` (${filtered.length}/${allRows.length})`;
-      // אם אתה רוצה רק מספר אחד: countEl.textContent = ` (${filtered.length})`;
     }
 
     renderList(listEl, filtered, (r) => {
       renderDetails(detailsEl, r);
       flyToCityByIndex(map, bboxIndex, r.city);
+      qEl.value = r.city;
     });
   };
+
+  qEl.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+
+    const typed = norm(qEl.value);
+    if (!typed) return;
+
+    const exactRow = rowByCity.get(normalizeCityName(typed));
+    if (exactRow) {
+      renderDetails(detailsEl, exactRow);
+      const ok = flyToCityByIndex(map, bboxIndex, exactRow.city);
+      if (!ok) console.warn("City exists in list but not in geojson:", exactRow.city);
+      return;
+    }
+
+    if (lastFiltered.length === 1) {
+      const r = lastFiltered[0];
+      qEl.value = r.city;
+      renderDetails(detailsEl, r);
+      flyToCityByIndex(map, bboxIndex, r.city);
+      return;
+    }
+
+    console.warn("Enter pressed but no exact match (and not a single result):", typed);
+  });
 
   qEl.addEventListener("input", apply);
   districtEl.addEventListener("change", apply);
