@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+  <title>Collaboration map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://unpkg.com/maplibre-gl@5.1.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@5.1.0/dist/maplibre-gl.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <div class="controls">
+    <div class="control-group">
+      <h4>Filters:</h4>
+      <button data-proj="globe">globes</button>
+      <button data-proj="mercator" class="active">Mercator</button>
+    </div>
+
+    <div class="control-group">
+      <h4>Base layer</h4>
+      <button data-style="standard" class="active">Normal</button>
+      <button data-style="satellite">Satellite</button>
+      <button data-style="osm">OSM</button>
+    </div>
+
+    <div class="control-group">
+      <h4>שכבות</h4>
+
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox" class="amenity" value="school" checked>Schools
+        </label>
+        <label>
+          <input type="checkbox" class="amenity" value="kindergarten" checked>Kindergartens
+        </label>
+        <label>
+          <input type="checkbox" class="amenity" value="college" checked>Colleges
+        </label>
+        <label>
+          <input type="checkbox" class="amenity" value="university" checked>Universities
+        </label>
+      </div>
+
+      <div class="button-group">
+        <button id="toggle-edu" class="active">Institutions</button>
+        <button id="toggle-labels" class="active">Labels</button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <h4>Search</h4>
+      <input id="q" placeholder="Look for a place..." />
+    </div>
+  </div>
+
+  <aside id="side-menu" class="side-menu">
+    <div class="side-header">
+      <h3>
+        Youth departments
+        <span id="cityCount" style="font-size:12px;opacity:.7;"></span>
+      </h3>
+
+      <label class="field">
+        <span>City search</span>
+        <input id="citySearch" placeholder="Type a city name..." />
+      </label>
+
+      <div class="filters">
+        <label class="field">
+          <span>District</span>
+          <select id="districtFilter">
+            <option value="">All</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Region/Sector</span>
+          <select id="sectorFilter">
+            <option value="">All</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="side-body">
+      <ul id="cityList" class="city-list"></ul>
+    </div>
+
+    <div class="side-footer">
+      <div id="cityDetails" class="city-details">
+        <div class="muted">Click on the city to see details!</div>
+      </div>
+    </div>
+  </aside>
+
+  <div id="loading"></div>
+  <div id="toast"></div>
+
+  <script type="module" src="./Java%20files/main.js"></script>
+</body>
+</html>
