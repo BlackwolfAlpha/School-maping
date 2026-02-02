@@ -1,4 +1,4 @@
-/* ============ משתני צבעים בסיסיים ============ */
+/* ============Basic color variables ============ */
 :root{
   --bg: #0b1020;
   --panel: rgba(255,255,255,0.92);
@@ -12,7 +12,7 @@
   --radius: 12px;
 }
 
-/* ============ בסיס הדף ============ */
+/* ============ Page base ============ */
 html, body{
   height: 100%;
   margin: 0;
@@ -28,124 +28,251 @@ html, body{
 }
 
 /* ===== Login screen ===== */
-.login-screen {
+.login-screen{
   position: fixed;
   inset: 0;
-  background:
-    radial-gradient(circle at top, rgba(255,255,255,0.06), transparent 40%),
-    linear-gradient(135deg, #0b1320, #121c2d, #0f2027);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   z-index: 9999;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow: hidden;
+
+  background-image: url("data/BG-image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* ===== Login box ===== */
-.login-box {
-  background: rgba(15, 20, 35, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  padding: 34px 28px 30px;
-  border-radius: 18px;
-  width: 320px;
+.login-screen::before{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.6), transparent 45%),
+    radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,.5), transparent 45%),
+    radial-gradient(1px 1px at 40% 75%, rgba(255,255,255,.4), transparent 45%),
+    radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,.3), transparent 45%);
+  opacity:.45;
+  animation: twinkle 7s ease-in-out infinite alternate;
+}
+
+.login-screen::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(900px 600px at 55% 92%, rgba(59,130,246,.16), transparent 60%),
+    linear-gradient(transparent 70%, rgba(0,0,0,.45));
+  pointer-events:none;
+}
+
+.login-box{
+  position: relative;
+  z-index: 2;
+  direction: ltr;
   text-align: center;
-  color: #fff;
+
+  width: clamp(420px, 36vw, 560px);
+  padding: 36px 38px 28px;
+  border-radius: 26px;
+  color: #eaf0ff;
+
+  background: linear-gradient(
+    180deg,
+    rgba(12,16,30,.78),
+    rgba(8,10,20,.65)
+  );
+
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+
   box-shadow:
-    0 30px 80px rgba(0,0,0,0.65),
-    inset 0 0 0 1px rgba(255,255,255,0.08);
-  animation: fadeInUp 0.6s ease-out;
+    0 40px 140px rgba(0,0,0,.75),
+    0 10px 60px rgba(59,130,246,.25),
+    inset 0 0 0 1px rgba(255,255,255,.12);
+
+  animation: in 650ms cubic-bezier(.2,.9,.2,1) forwards;
 }
 
-/* Title */
-.login-box h2 {
+.login-screen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      900px 600px at 50% 55%,
+      rgba(59,130,246,.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      1200px 800px at 50% 50%,
+      transparent 65%,
+      rgba(0,0,0,.65) 120%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.25),
+      rgba(0,0,0,.55)
+    );
+}
+
+.login-box::after{
+  content:"";
+  position:absolute;
+  inset:-60px;
+  z-index:-1;
+  border-radius: 40px;
+
+  background:
+    radial-gradient(420px 260px at 60% 30%, rgba(124,58,237,.30), transparent 60%),
+    radial-gradient(420px 260px at 40% 80%, rgba(59,130,246,.25), transparent 60%);
+
+  filter: blur(22px);
+  opacity: .9;
+  pointer-events:none;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom: 16px;
+}
+
+.logo{
+  width: 48px;
+  height: 48px;
+
+  background-image: url("data/Mini Main InoviteFuture logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  filter: drop-shadow(0 6px 18px rgba(59,130,246,.35));
+}
+
+.brand-text{ text-align:left; line-height:1.05; }
+
+.brand-title{
+  font-size: 28px;
+  font-weight: 850;
+  letter-spacing: .4px;
+  background: linear-gradient(90deg, #fff, rgba(255,255,255,.6));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.brand-sub{
+  margin-top: 3px;
+  font-size: 12px;
+  opacity: .7;
+}
+
+.login-box h2{
   margin: 0 0 6px;
-  font-size: 22px;
-  letter-spacing: 0.4px;
+  font-size: 18px;
 }
 
-/* Subtitle */
-.login-box p {
-  margin: 0 0 22px;
+.login-box p{
+  margin: 0 0 18px;
   font-size: 13px;
-  opacity: 0.75;
+  opacity: .75;
 }
 
-/* ===== Input ===== */
-.login-box input {
-  width: 90%;
-  padding: 13px 14px;
-  margin-bottom: 14px;
-  border-radius: 12px;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+.input-wrap{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  transition: .2s;
 }
 
-.login-box input::placeholder {
-  color: rgba(255,255,255,0.5);
+.input-wrap:focus-within{
+  border-color: rgba(59,130,246,.45);
+  box-shadow: 0 0 0 4px rgba(59,130,246,.14);
 }
 
-.login-box input:focus {
-  box-shadow:
-    inset 0 0 0 1px #ffb703,
-    0 0 0 3px rgba(255,183,3,0.25);
+#passwordInput{
+  width:100%;
+  background:transparent;
+  border:0;
+  outline:0;
+  color:#fff;
+  font-size:14px;
 }
 
-/* ===== Button ===== */
-.login-box button {
-  width: 100%;
-  padding: 13px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(135deg, #ffb703, #ffd166);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 10px 25px rgba(255,183,3,0.35);
+#loginBtn{
+  width:100%;
+  margin-top:14px;
+  padding:12px;
+  border-radius:14px;
+  border:0;
+  font-weight:700;
+  cursor:pointer;
+  color:#fff;
+
+  background: linear-gradient(180deg, #3b82f6, #2563eb);
+  box-shadow: 0 18px 50px rgba(37,99,235,.32);
+  transition:.15s;
 }
 
-.login-box button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(255,183,3,0.45);
+#loginBtn:hover{ filter:brightness(1.07); }
+#loginBtn:active{ transform:translateY(1px) scale(.99); }
+
+.login-error{
+  display:none;
+  margin-top:10px;
+  font-size:12px;
+  color:#fecaca;
+  background: rgba(248,113,113,.12);
+  border:1px solid rgba(248,113,113,.25);
+  border-radius:12px;
+  padding:8px 10px;
 }
 
-.login-box button:active {
-  transform: translateY(0);
-  box-shadow: 0 8px 18px rgba(255,183,3,0.35);
+.login-error.show{
+  display:block;
+  animation: fadeIn .25s ease;
 }
 
-/* ===== Error ===== */
-.login-error {
-  margin-top: 12px;
-  font-size: 13px;
-  color: #ff6b6b;
-  animation: shake 0.3s ease;
+.shake{
+  animation: shake .35s ease;
+  border-color: rgba(248,113,113,.45)!important;
 }
 
-/* ===== Animations ===== */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.login-screen.exit{
+  animation: fadeOut .4s ease forwards;
 }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-3px); }
-  100% { transform: translateX(0); }
+@keyframes in{
+  from{ opacity:0; transform: translateY(10px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+@keyframes twinkle{
+  from{ opacity:.35; }
+  to{ opacity:.55; }
+}
+
+@keyframes shake{
+  20%{ transform:translateX(-4px); }
+  40%{ transform:translateX(4px); }
+  60%{ transform:translateX(-3px); }
+  80%{ transform:translateX(3px); }
+}
+
+@keyframes fadeOut{
+  to{ opacity:0; transform:scale(.98); }
+}
+
+@keyframes fadeIn{
+  from{ opacity:0; transform:translateY(-4px); }
+  to{ opacity:1; transform:translateY(0); }
 }
 
 /* ============ פאנל הפקדים ============ */
