@@ -294,11 +294,12 @@ html, body{
 
 .controls,
 .side-menu {
-  position: absolute;
-  top: 100px;
-  right: 20px;
+  position: fixed;      
+  top: 120px;           
+  left: 20px;          
   cursor: grab;
   user-select: none;
+  z-index: 9999;
 }
 
 .controls.dragging,
