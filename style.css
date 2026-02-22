@@ -292,6 +292,20 @@ html, body{
   direction: rtl;
 }
 
+.controls,
+.side-menu {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  cursor: grab;
+  user-select: none;
+}
+
+.controls.dragging,
+.side-menu.dragging {
+  cursor: grabbing;
+}
+
 .control-group h4{
   margin: 0 0 6px;
   font-size: 13px;
