@@ -159,33 +159,60 @@
 
     function makeDraggable(element) {
       let isDragging = false;
-      let offsetX = 0;
-      let offsetY = 0;
+      let startX, startY;
+      let initialLeft, initialTop;
 
       element.addEventListener("mousedown", (e) => {
         isDragging = true;
         element.classList.add("dragging");
 
+        // Bring to front
+        element.style.zIndex = 10000;
+
         const rect = element.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        initialLeft = rect.left;
+        initialTop = rect.top;
+
+        document.addEventListener("mousemove", onMove);
+        document.addEventListener("mouseup", stopDrag);
       });
 
-      document.addEventListener("mousemove", (e) => {
+      function onMove(e) {
         if (!isDragging) return;
 
-        element.style.left = (e.clientX - offsetX) + "px";
-        element.style.top = (e.clientY - offsetY) + "px";
-      });
+        let dx = e.clientX - startX;
+        let dy = e.clientY - startY;
 
-      document.addEventListener("mouseup", () => {
+        let newLeft = initialLeft + dx;
+        let newTop = initialTop + dy;
+
+        // --- Optional boundary limits ---
+        const maxLeft = window.innerWidth - element.offsetWidth;
+        const maxTop = window.innerHeight - element.offsetHeight;
+
+        newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+        newTop = Math.max(0, Math.min(newTop, maxTop));
+
+        element.style.left = newLeft + "px";
+        element.style.top = newTop + "px";
+      }
+
+      function stopDrag() {
         isDragging = false;
         element.classList.remove("dragging");
-      });
+
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", stopDrag);
+      }
     }
 
+    // Apply to both
     makeDraggable(document.querySelector(".controls"));
-    makeDraggable(document.querySelector(".side-menu"));    
+    makeDraggable(document.querySelector(".side-menu")); 
   </script>
 
   <!-- 🚀 MAIN APP -->
