@@ -156,6 +156,36 @@
     input.addEventListener("keydown", e => {
       if (e.key === "Enter") tryLogin();
     });
+
+    function makeDraggable(element) {
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      element.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        element.classList.add("dragging");
+
+        const rect = element.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+
+        element.style.left = (e.clientX - offsetX) + "px";
+        element.style.top = (e.clientY - offsetY) + "px";
+      });
+
+      document.addEventListener("mouseup", () => {
+        isDragging = false;
+        element.classList.remove("dragging");
+      });
+    }
+
+    makeDraggable(document.querySelector(".controls"));
+    makeDraggable(document.querySelector(".side-menu"));    
   </script>
 
   <!-- 🚀 MAIN APP -->
