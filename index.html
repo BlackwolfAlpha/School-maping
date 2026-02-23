@@ -45,77 +45,90 @@
 
     <div id="map"></div>
 
-    <div class="controls">
-      <div class="control-group">
-        <h4>Filters:</h4>
-        <button data-proj="globe">globes</button>
-        <button data-proj="mercator" class="active">Mercator</button>
+    <div class="controls" id="controls">
+      <div class="panel-bar">
+        <strong class="panel-title">Controls</strong>
+        <button class="panel-toggle" type="button" data-toggle-panel="#controls">קיפול</button>
       </div>
 
-      <div class="control-group">
-        <h4>Base layer</h4>
-        <button data-style="standard" class="active">Normal</button>
-        <button data-style="satellite">Satellite</button>
-        <button data-style="osm">OSM</button>
-      </div>
-
-      <div class="control-group">
-        <h4>שכבות</h4>
-        <div class="checkbox-group">
-          <label><input type="checkbox" class="amenity" value="school" checked>Schools</label>
-          <label><input type="checkbox" class="amenity" value="kindergarten" checked>Kindergartens</label>
-          <label><input type="checkbox" class="amenity" value="college" checked>Colleges</label>
-          <label><input type="checkbox" class="amenity" value="university" checked>Universities</label>
+      <div class="panel-body">
+        <div class="control-group">
+          <h4>Filters:</h4>
+          <button data-proj="globe">globes</button>
+          <button data-proj="mercator" class="active">Mercator</button>
         </div>
 
-        <div class="button-group">
-          <button id="toggle-edu" class="active">Institutions</button>
-          <button id="toggle-labels" class="active">Labels</button>
+        <div class="control-group">
+          <h4>Base layer</h4>
+          <button data-style="standard" class="active">Normal</button>
+          <button data-style="satellite">Satellite</button>
+          <button data-style="osm">OSM</button>
         </div>
-      </div>
 
-      <div class="control-group">
-        <h4>Search</h4>
-        <input id="q" placeholder="Look for a place..." />
+        <div class="control-group">
+          <h4>שכבות</h4>
+          <div class="checkbox-group">
+            <label><input type="checkbox" class="amenity" value="school" checked>Schools</label>
+            <label><input type="checkbox" class="amenity" value="kindergarten" checked>Kindergartens</label>
+            <label><input type="checkbox" class="amenity" value="college" checked>Colleges</label>
+            <label><input type="checkbox" class="amenity" value="university" checked>Universities</label>
+          </div>
+
+          <div class="button-group">
+            <button id="toggle-edu" class="active">Institutions</button>
+            <button id="toggle-labels" class="active">Labels</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h4>Search</h4>
+          <input id="q" placeholder="Look for a place..." />
+        </div>
       </div>
     </div>
 
     <aside id="side-menu" class="side-menu">
-      <div class="side-header">
-        <h3>
+      <div class="panel-bar side-topbar">
+        <h3 class="side-title">
           Youth departments
           <span id="cityCount" style="font-size:12px;opacity:.7;"></span>
         </h3>
 
-        <label class="field">
-          <span>City search</span>
-          <input id="citySearch" placeholder="Type a city name..." />
-        </label>
+        <button class="panel-toggle" type="button" data-toggle-panel="#side-menu">קיפול</button>
+      </div>
 
-        <div class="filters">
+      <div class="panel-body">
+        <div class="side-header">
           <label class="field">
-            <span>District</span>
-            <select id="districtFilter">
-              <option value="">All</option>
-            </select>
+            <span>City search</span>
+            <input id="citySearch" placeholder="Type a city name..." />
           </label>
 
-          <label class="field">
-            <span>Region/Sector</span>
-            <select id="sectorFilter">
-              <option value="">All</option>
-            </select>
-          </label>
+          <div class="filters">
+            <label class="field">
+              <span>District</span>
+              <select id="districtFilter">
+                <option value="">All</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Region/Sector</span>
+              <select id="sectorFilter">
+                <option value="">All</option>
+              </select>
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div class="side-body">
-        <ul id="cityList" class="city-list"></ul>
-      </div>
+        <div class="side-body">
+          <ul id="cityList" class="city-list"></ul>
+        </div>
 
-      <div class="side-footer">
-        <div id="cityDetails" class="city-details">
-          <div class="muted">Click on the city to see details!</div>
+        <div class="side-footer">
+          <div id="cityDetails" class="city-details">
+            <div class="muted">Click on the city to see details!</div>
+          </div>
         </div>
       </div>
     </aside>
@@ -153,50 +166,57 @@
     }
 
     btn.addEventListener("click", tryLogin);
-    input.addEventListener("keydown", e => {
+    input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") tryLogin();
     });
 
-    function makeDraggable(element) {
-      let isDragging = false;
-      let startX, startY;
-      let initialLeft, initialTop;
+    // ========= Draggable (mouse + touch), ignores clicks on inputs/buttons =========
+    let topZ = 10000;
 
-      element.addEventListener("mousedown", (e) => {
+    function makeDraggable(element, handleSelector = null) {
+      if (!element) return;
+
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let initialLeft = 0, initialTop = 0;
+
+      // אם יש handleSelector, גוררים רק ממנו. אחרת גוררים מהאלמנט עצמו
+      const handle = handleSelector ? element.querySelector(handleSelector) : element;
+
+      // אל תתחיל גרירה אם לחצו על אלמנטים אינטראקטיביים
+      function isInteractiveTarget(target) {
+        return !!target.closest("input, textarea, select, button, a, label");
+      }
+
+      function startDrag(clientX, clientY) {
         isDragging = true;
         element.classList.add("dragging");
-
-        // Bring to front
-        element.style.zIndex = 10000;
+        element.style.zIndex = String(++topZ);
 
         const rect = element.getBoundingClientRect();
-
-        startX = e.clientX;
-        startY = e.clientY;
-
+        startX = clientX;
+        startY = clientY;
         initialLeft = rect.left;
         initialTop = rect.top;
+      }
 
-        document.addEventListener("mousemove", onMove);
-        document.addEventListener("mouseup", stopDrag);
-      });
-
-      function onMove(e) {
+      function moveDrag(clientX, clientY) {
         if (!isDragging) return;
 
-        let dx = e.clientX - startX;
-        let dy = e.clientY - startY;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
 
         let newLeft = initialLeft + dx;
         let newTop = initialTop + dy;
 
-        // --- Optional boundary limits ---
+        // גבולות מסך
         const maxLeft = window.innerWidth - element.offsetWidth;
         const maxTop = window.innerHeight - element.offsetHeight;
 
         newLeft = Math.max(0, Math.min(newLeft, maxLeft));
         newTop = Math.max(0, Math.min(newTop, maxTop));
 
+        // חשוב: לעבוד עם left/top בלבד (וודא שב-CSS אין right/bottom/left:auto)
         element.style.left = newLeft + "px";
         element.style.top = newTop + "px";
       }
@@ -204,15 +224,81 @@
       function stopDrag() {
         isDragging = false;
         element.classList.remove("dragging");
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
 
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", stopDrag);
+        document.removeEventListener("touchmove", onTouchMove, { passive: false });
+        document.removeEventListener("touchend", onTouchEnd);
+        document.removeEventListener("touchcancel", onTouchEnd);
       }
+
+      // ---- Mouse handlers ----
+      function onMouseDown(e) {
+        if (e.button !== 0) return; // רק קליק שמאלי
+        if (isInteractiveTarget(e.target)) return;
+
+        e.preventDefault();
+        startDrag(e.clientX, e.clientY);
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      }
+
+      function onMouseMove(e) {
+        moveDrag(e.clientX, e.clientY);
+      }
+
+      function onMouseUp() {
+        stopDrag();
+      }
+
+      // ---- Touch handlers ----
+      function onTouchStart(e) {
+        if (isInteractiveTarget(e.target)) return;
+        if (!e.touches || e.touches.length !== 1) return;
+
+        // מונע גלילה בזמן גרירה
+        e.preventDefault();
+
+        const t = e.touches[0];
+        startDrag(t.clientX, t.clientY);
+
+        document.addEventListener("touchmove", onTouchMove, { passive: false });
+        document.addEventListener("touchend", onTouchEnd);
+        document.addEventListener("touchcancel", onTouchEnd);
+      }
+
+      function onTouchMove(e) {
+        if (!e.touches || e.touches.length !== 1) return;
+        e.preventDefault();
+
+        const t = e.touches[0];
+        moveDrag(t.clientX, t.clientY);
+      }
+
+      function onTouchEnd() {
+        stopDrag();
+      }
+
+      handle.addEventListener("mousedown", onMouseDown);
+      handle.addEventListener("touchstart", onTouchStart, { passive: false });
     }
 
     // Apply to both
     makeDraggable(document.querySelector(".controls"));
-    makeDraggable(document.querySelector(".side-menu")); 
+    makeDraggable(document.querySelector(".side-menu"));
+
+    // ========= Optional: Collapse buttons (if you added data-toggle-panel buttons) =========
+    document.addEventListener("click", (e) => {
+      const toggle = e.target.closest("[data-toggle-panel]");
+      if (!toggle) return;
+
+      const panel = document.querySelector(toggle.dataset.togglePanel);
+      if (!panel) return;
+
+      panel.classList.toggle("is-collapsed");
+      toggle.textContent = panel.classList.contains("is-collapsed") ? "פתיחה" : "קיפול";
+    });
   </script>
 
   <!-- 🚀 MAIN APP -->
