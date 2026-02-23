@@ -275,12 +275,11 @@ html, body{
   to{ opacity:1; transform:translateY(0); }
 }
 
-/* ============ פאנל הפקדים ============ */
+/* ================= Controls panel ================= */
 .controls{
+  /* סגנון */
   position: fixed;
-  inset-inline-start: 12px;
-  inset-block-start: 12px;
-  z-index: 10;
+  z-index: 9999;                 /* שיהיה מעל הכל */
   background: var(--panel);
   border: 1px solid var(--stroke);
   box-shadow: var(--shadow);
@@ -290,21 +289,39 @@ html, body{
   display: grid;
   gap: 12px;
   direction: rtl;
-}
 
-.controls,
-.side-menu {
-  position: fixed;      
-  top: 120px;           
-  left: 20px;          
+  /* מיקום התחלתי (לגרירה עם JS עדיף left/top בלבד) */
+  top: 12px;
+  left: 12px;
+
+  /* גרירה */
   cursor: grab;
   user-select: none;
+}
+
+/* ================= Side menu (draggable) ================= */
+.side-menu{
+  position: fixed;
   z-index: 9999;
+
+  /* מיקום התחלתי (אפשר לשנות) */
+  top: 120px;
+  left: 20px;
+
+  /* גרירה */
+  cursor: grab;
+  user-select: none;
 }
 
 .controls.dragging,
-.side-menu.dragging {
+.side-menu.dragging{
   cursor: grabbing;
+}
+
+/* ================= קבוצות ================= */
+.control-group{
+  display: grid;
+  gap: 8px;
 }
 
 .control-group h4{
@@ -312,11 +329,6 @@ html, body{
   font-size: 13px;
   font-weight: 700;
   color: var(--text-dim);
-}
-
-.control-group{
-  display: grid;
-  gap: 8px;
 }
 
 .checkbox-group{
