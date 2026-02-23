@@ -1,13 +1,22 @@
 /* ============Basic color variables ============ */
 :root{
   --bg: #0b1020;
-  --panel: rgba(255,255,255,0.92);
+
+  --panel: rgba(255,255,255,0.92);        
+  --panel-bg: rgba(255,255,255,0.92);     
+  --panel-border: rgba(0,0,0,0.10);       
+  --stroke: rgba(0,0,0,0.08);
+
   --text: #0f172a;
   --text-dim: #475569;
+  --muted: rgba(0,0,0,0.60);
+
   --brand: #7C3AED;
   --accent: #22C55E;
   --warn: #EAB308;
-  --stroke: rgba(0,0,0,0.08);
+
+  --soft: rgba(0,0,0,0.05);
+  --soft2: rgba(0,0,0,0.08);
   --shadow: 0 10px 25px rgba(0,0,0,0.18);
   --radius: 12px;
 }
@@ -46,11 +55,15 @@ html, body{
   content:"";
   position:absolute;
   inset:-20%;
+  pointer-events:none;
   background:
     radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.6), transparent 45%),
     radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,.5), transparent 45%),
     radial-gradient(1px 1px at 40% 75%, rgba(255,255,255,.4), transparent 45%),
-    radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,.3), transparent 45%);
+    radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,.3), transparent 45%),
+    radial-gradient(900px 600px at 50% 55%, rgba(59,130,246,.22), transparent 60%),
+    radial-gradient(1200px 800px at 50% 50%, transparent 65%, rgba(0,0,0,.65) 120%),
+    linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55));
   opacity:.45;
   animation: twinkle 7s ease-in-out infinite alternate;
 }
@@ -91,30 +104,6 @@ html, body{
     inset 0 0 0 1px rgba(255,255,255,.12);
 
   animation: in 650ms cubic-bezier(.2,.9,.2,1) forwards;
-}
-
-.login-screen::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-
-  background:
-    radial-gradient(
-      900px 600px at 50% 55%,
-      rgba(59,130,246,.22),
-      transparent 60%
-    ),
-    radial-gradient(
-      1200px 800px at 50% 50%,
-      transparent 65%,
-      rgba(0,0,0,.65) 120%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(0,0,0,.25),
-      rgba(0,0,0,.55)
-    );
 }
 
 .login-box::after{
@@ -302,23 +291,13 @@ html, body{
 .controls.dragging{ cursor: grabbing; }
 
 /* ================= Side menu (clean + draggable) ================= */
-:root{
-  --panel-bg: rgba(255,255,255,0.92);
-  --panel-border: rgba(0,0,0,0.10);
-  --text: rgba(0,0,0,0.90);
-  --muted: rgba(0,0,0,0.60);
-  --soft: rgba(0,0,0,0.05);
-  --soft2: rgba(0,0,0,0.08);
-  --accent: #1a73e8;
-}
-
 /* container */
 .side-menu{
-  position: fixed;             
+  position: fixed;
   top: 120px;
   left: 20px;
-  right: auto;                 
-  bottom: auto;               
+  right: auto;
+  bottom: auto;
 
   width: 380px;
   max-width: calc(100vw - 24px);
@@ -330,14 +309,11 @@ html, body{
   box-shadow: 0 14px 40px rgba(0,0,0,0.22);
   overflow: hidden;
 
-  z-index: 9999;                
-
+  z-index: 9999;
   display: flex;
   flex-direction: column;
-
   backdrop-filter: blur(8px);
 
-  /* גרירה */
   cursor: grab;
   user-select: none;
 }
