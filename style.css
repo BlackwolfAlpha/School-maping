@@ -159,8 +159,12 @@ html, body{
   font-size: 28px;
   font-weight: 850;
   letter-spacing: .4px;
+
   background: linear-gradient(90deg, #fff, rgba(255,255,255,.6));
   -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent; 
   color: transparent;
 }
 
@@ -279,7 +283,7 @@ html, body{
 .controls{
   /* סגנון */
   position: fixed;
-  z-index: 9999;                 /* שיהיה מעל הכל */
+  z-index: 9999;                
   background: var(--panel);
   border: 1px solid var(--stroke);
   box-shadow: var(--shadow);
@@ -289,185 +293,15 @@ html, body{
   display: grid;
   gap: 12px;
   direction: rtl;
-
-  /* מיקום התחלתי (לגרירה עם JS עדיף left/top בלבד) */
   top: 12px;
   left: 12px;
-
-  /* גרירה */
   cursor: grab;
   user-select: none;
 }
 
-/* ================= Side menu (draggable) ================= */
-.side-menu{
-  position: fixed;
-  z-index: 9999;
+.controls.dragging{ cursor: grabbing; }
 
-  /* מיקום התחלתי (אפשר לשנות) */
-  top: 120px;
-  left: 20px;
-
-  /* גרירה */
-  cursor: grab;
-  user-select: none;
-}
-
-.controls.dragging,
-.side-menu.dragging{
-  cursor: grabbing;
-}
-
-/* ================= קבוצות ================= */
-.control-group{
-  display: grid;
-  gap: 8px;
-}
-
-.control-group h4{
-  margin: 0 0 6px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-dim);
-}
-
-.checkbox-group{
-  display: grid;
-  gap: 6px;
-}
-
-.checkbox-group label{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.button-group{
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* ============ כפתורים ושדות ============ */
-.controls button{
-  border: 1px solid var(--stroke);
-  background: #fff;
-  color: var(--text);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
-}
-
-.controls button:hover{
-  border-color: rgba(0,0,0,0.18);
-}
-
-.controls button.active{
-  border-color: var(--brand);
-  box-shadow: 0 0 0 2px rgba(124,58,237,0.25);
-}
-
-.controls input[type="checkbox"]{
-  inline-size: 16px;
-  block-size: 16px;
-  accent-color: var(--brand);
-}
-
-#q{
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--stroke);
-  border-radius: 999px;
-  font-size: 14px;
-  outline: none;
-}
-
-#q:focus{
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.22);
-  border-color: var(--brand);
-}
-
-/* ============ Loader & Toast ============ */
-#loading{
-  position: fixed;
-  inset-inline-end: 12px;
-  inset-block-start: 12px;
-  z-index: 11;
-  display: none;
-  background: var(--panel);
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
-}
-
-#loading::before{
-  content: "";
-  display: inline-block;
-  width: 10px; height: 10px;
-  margin-inline-end: 8px;
-  border-radius: 50%;
-  border: 2px solid var(--brand);
-  border-top-color: transparent;
-  animation: spin .8s linear infinite;
-  vertical-align: -1px;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-#toast{
-  position: fixed;
-  inset-inline-end: 12px;
-  inset-block-end: 12px;
-  z-index: 11;
-  display: none;
-  background: rgba(17,17,17,0.92);
-  color: #fff;
-  border-radius: 999px;
-  padding: 8px 14px;
-  font-size: 13px;
-  box-shadow: var(--shadow);
-}
-
-#q {
-  width: 200px;
-  max-width: 90vw;
-
-  padding: 10px 14px;
-  font-size: 14px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #111827;
-
-  outline: none;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-#q::placeholder {
-  color: #9ca3af;
-}
-
-#q:focus {
-  border-color: #6366f1;
-  box-shadow:
-    0 0 0 3px rgba(99,102,241,0.25),
-    0 1px 2px rgba(0,0,0,0.05);
-}
-
-/* ===== Side menu (clean + clear hierarchy) ===== */
-
+/* ================= Side menu (clean + draggable) ================= */
 :root{
   --panel-bg: rgba(255,255,255,0.92);
   --panel-border: rgba(0,0,0,0.10);
@@ -480,11 +314,11 @@ html, body{
 
 /* container */
 .side-menu{
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  left: auto;
-  top: auto;
+  position: fixed;             
+  top: 120px;
+  left: 20px;
+  right: auto;                 
+  bottom: auto;               
 
   width: 380px;
   max-width: calc(100vw - 24px);
@@ -495,13 +329,20 @@ html, body{
   border-radius: 16px;
   box-shadow: 0 14px 40px rgba(0,0,0,0.22);
   overflow: hidden;
-  z-index: 5;
+
+  z-index: 9999;                
 
   display: flex;
   flex-direction: column;
 
   backdrop-filter: blur(8px);
+
+  /* גרירה */
+  cursor: grab;
+  user-select: none;
 }
+
+.side-menu.dragging{ cursor: grabbing; }
 
 /* header */
 .side-header{
@@ -546,7 +387,6 @@ html, body{
   letter-spacing: 0.2px;
 }
 
-/* IMPORTANT: remove the fixed width */
 .field input,
 .field select{
   width: 100%;
@@ -636,7 +476,7 @@ html, body{
 .city-list .meta{
   font-size: 12px;
   color: var(--muted);
-  opacity: 1; /* override old opacity */
+  opacity: 1;
 }
 
 /* footer details */
@@ -671,3 +511,127 @@ html, body{
 }
 
 .muted{ color: var(--muted); opacity: 1; }
+
+/* ================= קבוצות (controls) ================= */
+.control-group{
+  display: grid;
+  gap: 8px;
+}
+
+.control-group h4{
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.checkbox-group{
+  display: grid;
+  gap: 6px;
+}
+
+.checkbox-group label{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.button-group{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ============ כפתורים ושדות (controls) ============ */
+.controls button{
+  border: 1px solid var(--stroke);
+  background: #fff;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: box-shadow .15s ease, border-color .15s ease, background-color .15s ease;
+}
+
+.controls button:hover{
+  border-color: rgba(0,0,0,0.18);
+}
+
+.controls button.active{
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px rgba(124,58,237,0.25);
+}
+
+.controls input[type="checkbox"]{
+  inline-size: 16px;
+  block-size: 16px;
+  accent-color: var(--brand);
+}
+
+#q{
+  width: 100%;
+  max-width: 320px; 
+  padding: 10px 14px;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#q::placeholder{ color: #9ca3af; }
+
+#q:focus{
+  border-color: var(--brand);
+  box-shadow:
+    0 0 0 3px rgba(124,58,237,0.22),
+    0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* ============ Loader & Toast ============ */
+#loading{
+  position: fixed;
+  inset-inline-end: 12px;
+  inset-block-start: 12px;
+  z-index: 11;
+  display: none;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  box-shadow: var(--shadow);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+#loading::before{
+  content: "";
+  display: inline-block;
+  width: 10px; height: 10px;
+  margin-inline-end: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  border-top-color: transparent;
+  animation: spin .8s linear infinite;
+  vertical-align: -1px;
+}
+
+@keyframes spin{ to { transform: rotate(360deg); } }
+
+#toast{
+  position: fixed;
+  inset-inline-end: 12px;
+  inset-block-end: 12px;
+  z-index: 11;
+  display: none;
+  background: rgba(17,17,17,0.92);
+  color: #fff;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  box-shadow: var(--shadow);
+}
