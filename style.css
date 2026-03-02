@@ -459,27 +459,22 @@ html, body{
 .city-details{
   position: relative;
 
-  padding: 34px 12px 12px;
-
+  padding: 32px 14px 14px;   
   border-radius: 14px;
 
-  background: rgba(10, 10, 15, 0.88);
-  color: #eaf0ff;
+  background: rgba(255,255,255,0.95);
+  color: var(--text);
 
-  border: 1px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(6px);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 
   font-size: 13px;
   line-height: 1.5;
-
-  direction: rtl;
-  text-align: right;
 }
 
 .city-details .title{
   font-weight: 900;
   margin-bottom: 6px;
-  color: #ffffff;
 }
 
 .city-details a{
@@ -493,34 +488,28 @@ html, body{
 .city-details .close-btn{
   position: absolute;
   top: 8px;
-
-  inset-inline-end: 8px;
-  left: 8px;
-  right: auto;
+  left: 8px;     
 
   width: 26px;
   height: 26px;
 
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.10);
-  color: #eaf0ff;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.05);
+  color: #111;
 
   cursor: pointer;
   font-weight: 800;
-  font-size: 14px;
-  line-height: 1;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  transition: background .15s ease, transform .15s ease;
+  transition: background .15s ease;
 }
 
 .city-details .close-btn:hover{
-  background: rgba(255,255,255,0.18);
-  transform: scale(1.03);
+  background: rgba(0,0,0,0.12);
 }
 
 .muted{ color: var(--muted); opacity: 1; }
