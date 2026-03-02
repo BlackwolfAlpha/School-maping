@@ -190,10 +190,8 @@
       let startX = 0, startY = 0;
       let initialLeft = 0, initialTop = 0;
 
-      // אם יש handleSelector, גוררים רק ממנו. אחרת גוררים מהאלמנט עצמו
       const handle = handleSelector ? element.querySelector(handleSelector) : element;
 
-      // אל תתחיל גרירה אם לחצו על אלמנטים אינטראקטיביים
       function isInteractiveTarget(target) {
         return !!target.closest("input, textarea, select, button, a, label");
       }
@@ -244,7 +242,7 @@
 
       // ---- Mouse handlers ----
       function onMouseDown(e) {
-        if (e.button !== 0) return; // רק קליק שמאלי
+        if (e.button !== 0) return; 
         if (isInteractiveTarget(e.target)) return;
 
         e.preventDefault();
@@ -267,7 +265,6 @@
         if (isInteractiveTarget(e.target)) return;
         if (!e.touches || e.touches.length !== 1) return;
 
-        // מונע גלילה בזמן גרירה
         e.preventDefault();
 
         const t = e.touches[0];
