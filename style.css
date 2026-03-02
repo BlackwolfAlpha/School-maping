@@ -478,9 +478,10 @@ html, body{
 }
 
 .city-details a{
-  color: var(--accent);
+  color: #000000;
   text-decoration: none;
 }
+
 .city-details a:hover{
   text-decoration: underline;
 }
