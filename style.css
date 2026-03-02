@@ -268,9 +268,8 @@ html, body{
   to{ opacity:1; transform:translateY(0); }
 }
 
-/* ================= Controls panel ================= */
+/* ================= Controls panel setup ================= */
 .controls{
-  /* סגנון */
   position: fixed;
   z-index: 9999;                
   background: var(--panel);
@@ -290,8 +289,6 @@ html, body{
 
 .controls.dragging{ cursor: grabbing; }
 
-/* ================= Side menu (clean + draggable) ================= */
-/* container */
 .side-menu{
   position: fixed;
   top: 120px;
@@ -320,6 +317,7 @@ html, body{
 
 .side-menu.dragging{ cursor: grabbing; }
 
+/* ================= Side menu setup (clean + draggable) ================= */
 /* header */
 .side-header{
   padding: 12px;
@@ -568,6 +566,43 @@ html, body{
     0 0 0 3px rgba(124,58,237,0.22),
     0 1px 2px rgba(0,0,0,0.05);
 }
+
+/* ===== Panel bar + Toggle button ===== */
+.panel-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 10px;
+  border-bottom:1px solid var(--stroke);
+  background: rgba(255,255,255,0.96);
+  border-radius: 12px 12px 0 0;
+}
+
+.controls .panel-bar{
+  padding: 6px 6px;
+  border-radius: 10px;
+}
+
+.panel-toggle{
+  border: 1px solid var(--stroke);
+  background: #fff;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.is-collapsed > .panel-body{
+  display:none;
+}
+
+.controls.is-collapsed{ gap:0; }
+.side-menu.is-collapsed{ gap:0; }
 
 /* ============ Loader & Toast ============ */
 #loading{
