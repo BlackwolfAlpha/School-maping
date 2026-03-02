@@ -108,6 +108,8 @@ function renderDetails(detailsEl, r) {
     : "";
 
   detailsEl.innerHTML = `
+    <button class="close-btn" type="button" aria-label="Close">✕</button>
+
     <div class="title">${r.city}</div>
     <div><strong>District:</strong> ${r.district || "-"}</div>
     <div><strong>Region/Sector:</strong> ${r.sector || "-"}</div>
@@ -116,6 +118,18 @@ function renderDetails(detailsEl, r) {
     ${phoneLine}
     ${emailLine}
   `;
+
+  const closeBtn = detailsEl.querySelector(".close-btn");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      detailsEl.innerHTML = `<div class="muted">Click on the city to see details!</div>`;
+      detailsEl.dataset.openCity = "";
+    });
+  }
+
+  detailsEl.dataset.openCity = normalizeCityName(r.city);
 }
 
 function renderList(listEl, rows, onClickRow) {
@@ -272,6 +286,15 @@ export async function setupSideMenu(map, {
     }
 
     renderList(listEl, filtered, (r) => {
+      const key = normalizeCityName(r.city);
+      const isSameOpen = detailsEl.dataset.openCity === key;
+
+      if (isSameOpen) {
+        detailsEl.innerHTML = `<div class="muted">Click on the city to see details!</div>`;
+        detailsEl.dataset.openCity = "";
+        return;
+      }
+
       renderDetails(detailsEl, r);
       flyToCityByIndex(map, bboxIndex, r.city);
       qEl.value = r.city;
