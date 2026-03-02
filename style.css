@@ -507,9 +507,9 @@ html, body{
   height: 26px;
 
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.08);
-  background: rgba(0,0,0,0.05);
-  color: #111;
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
 
   cursor: pointer;
   font-weight: 800;
@@ -518,11 +518,12 @@ html, body{
   align-items: center;
   justify-content: center;
 
-  transition: background .15s ease;
+  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }
 
 .city-details .close-btn:hover{
-  background: rgba(0,0,0,0.12);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.18);
 }
 
 .muted{ color: var(--muted); opacity: 1; }
@@ -640,7 +641,7 @@ html, body{
 
 .panel-toggle{
   border: 1px solid var(--stroke);
-  background: #fff;
+  background: rgba(255,255,255,0.06);
   color: var(--text);
   border-radius: 999px;
   padding: 6px 10px;
@@ -649,6 +650,12 @@ html, body{
   cursor: pointer;
   user-select: none;
   touch-action: manipulation;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.panel-toggle:hover{
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.18);
 }
 
 .is-collapsed > .panel-body{
