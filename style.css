@@ -488,7 +488,8 @@ html, body{
 .city-details .close-btn{
   position: absolute;
   top: 8px;
-  right: 8px;
+  left: 8px;
+  
   border: none;
   background: rgba(0,0,0,0.06);
   border-radius: 999px;
