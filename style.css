@@ -478,7 +478,7 @@ html, body{
 }
 
 .city-details a{
-  color: var(--accent);
+  color: #000;
   text-decoration: none;
 }
 .city-details a:hover{
