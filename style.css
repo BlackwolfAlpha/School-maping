@@ -415,7 +415,6 @@ html, body{
   margin: 0;
 }
 
-/* each row */
 .city-list li{
   display: flex;
   justify-content: space-between;
@@ -440,20 +439,17 @@ html, body{
   transform: translateY(1px);
 }
 
-/* City title */
 .city-list li strong{
   font-weight: 800;
   color: var(--text);
 }
 
-/* meta line */
 .city-list .meta{
   font-size: 12px;
   color: var(--muted);
   opacity: 1;
 }
 
-/* footer details */
 .side-footer{
   border-top: 1px solid var(--panel-border);
   padding: 10px 12px;
@@ -461,54 +457,70 @@ html, body{
 }
 
 .city-details{
+  position: relative;
+
+  padding: 34px 12px 12px;
+
+  border-radius: 14px;
+
+  background: rgba(10, 10, 15, 0.88);
+  color: #eaf0ff;
+
+  border: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(6px);
+
   font-size: 13px;
   line-height: 1.5;
 
-  position: relative;
-  padding: 12px 12px 10px;
-  border-radius: 14px;
+  direction: rtl;
+  text-align: right;
+}
 
-  background: rgba(10,10,15,0.88);          
-  color: #eaf0ff;                          
-  border: 1px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(6px);
+.city-details .title{
+  font-weight: 900;
+  margin-bottom: 6px;
+  color: #ffffff;
 }
 
 .city-details a{
-  color: var(--accent);                     
+  color: var(--accent);
   text-decoration: none;
 }
 .city-details a:hover{
   text-decoration: underline;
 }
 
-.city-details .title{
-  font-weight: 900;
-  margin-bottom: 6px;
-}
-
 .city-details .close-btn{
-  position:absolute;
-  top:8px;
-  inset-inline-end:8px;
+  position: absolute;
+  top: 8px;
 
-  border: none;
-  background: rgba(0,0,0,0.06);
-  border-radius: 999px;
+  inset-inline-end: 8px;
+  left: 8px;
+  right: auto;
+
   width: 26px;
   height: 26px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.10);
+  color: #eaf0ff;
+
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
   line-height: 1;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background .15s ease;
+
+  transition: background .15s ease, transform .15s ease;
 }
 
 .city-details .close-btn:hover{
-  background: rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.18);
+  transform: scale(1.03);
 }
 
 .muted{ color: var(--muted); opacity: 1; }
