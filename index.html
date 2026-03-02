@@ -48,7 +48,7 @@
     <div class="controls" id="controls">
       <div class="panel-bar">
         <strong class="panel-title">Controls</strong>
-        <button class="panel-toggle" type="button" data-toggle-panel="#controls">קיפול</button>
+        <button class="panel-toggle" type="button" data-toggle-panel="#controls">Folding</button>
       </div>
 
       <div class="panel-body">
@@ -66,7 +66,7 @@
         </div>
 
         <div class="control-group">
-          <h4>שכבות</h4>
+          <h4>Layer</h4>
           <div class="checkbox-group">
             <label><input type="checkbox" class="amenity" value="school" checked>Schools</label>
             <label><input type="checkbox" class="amenity" value="kindergarten" checked>Kindergartens</label>
@@ -94,7 +94,7 @@
           <span id="cityCount" style="font-size:12px;opacity:.7;"></span>
         </h3>
 
-        <button class="panel-toggle" type="button" data-toggle-panel="#side-menu">קיפול</button>
+        <button class="panel-toggle" type="button" data-toggle-panel="#side-menu">Folding</button>
       </div>
 
       <div class="panel-body">
@@ -284,21 +284,37 @@
       handle.addEventListener("touchstart", onTouchStart, { passive: false });
     }
 
-    // Apply to both
-    makeDraggable(document.querySelector(".controls"));
-    makeDraggable(document.querySelector(".side-menu"));
+    makeDraggable(document.querySelector(".controls"), ".panel-bar");
+    makeDraggable(document.querySelector(".side-menu"), ".panel-bar");
 
-    // ========= Optional: Collapse buttons (if you added data-toggle-panel buttons) =========
-    document.addEventListener("click", (e) => {
-      const toggle = e.target.closest("[data-toggle-panel]");
-      if (!toggle) return;
+    (function setupPanelToggles(){
+      function setLabel(btn, collapsed){
+        btn.textContent = collapsed ? "Open" : "Close";
+        btn.setAttribute("aria-expanded", String(!collapsed));
+      }
 
-      const panel = document.querySelector(toggle.dataset.togglePanel);
-      if (!panel) return;
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest(".panel-toggle[data-toggle-panel]");
+        if (!btn) return;
 
-      panel.classList.toggle("is-collapsed");
-      toggle.textContent = panel.classList.contains("is-collapsed") ? "פתיחה" : "קיפול";
-    });
+        e.preventDefault();
+        e.stopPropagation(); 
+        const selector = btn.getAttribute("data-toggle-panel");
+        const panel = selector ? document.querySelector(selector) : null;
+        if (!panel) return;
+
+        const collapsed = !panel.classList.contains("is-collapsed");
+        panel.classList.toggle("is-collapsed", collapsed);
+        setLabel(btn, collapsed);
+      }, true);
+
+      document.querySelectorAll(".panel-toggle[data-toggle-panel]").forEach(btn => {
+        const selector = btn.getAttribute("data-toggle-panel");
+        const panel = selector ? document.querySelector(selector) : null;
+        const collapsed = panel ? panel.classList.contains("is-collapsed") : false;
+        setLabel(btn, collapsed);
+      });
+    })();
   </script>
 
   <!-- 🚀 MAIN APP -->
