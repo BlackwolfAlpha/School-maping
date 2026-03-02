@@ -486,10 +486,10 @@ html, body{
 }
 
 .city-details .close-btn{
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  
+  position:absolute;
+  top:8px;
+  inset-inline-start:8px;
+
   border: none;
   background: rgba(0,0,0,0.06);
   border-radius: 999px;
