@@ -486,6 +486,19 @@ html, body{
 
 .muted{ color: var(--muted); opacity: 1; }
 
+.side-menu .panel-body{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.side-menu .side-body{
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
 /* ================= קבוצות (controls) ================= */
 .control-group{
   display: grid;
